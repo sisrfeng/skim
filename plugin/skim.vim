@@ -276,24 +276,79 @@ fun! s:common_sink(action, lines) abort
 endf
 
 fun! s:get_color(attr, ...)
-    let gui = !s:is_win && !has('win32unix') && has('termguicolors') && &termguicolors
-    let fam = gui ? 'gui' : 'cterm'
-    let pat = gui ? '^#[a-f0-9]\+' : '^[0-9]\+$'
+    let gui = !s:is_win &&
+        \ !has('win32unix') &&
+        \ has('termguicolors') &&
+        \ &termguicolors
+    let ui_ = gui ? 'gui' : 'cterm'
+    let pat = gui ?
+        \ '^#[a-f0-9]\+'
+        \ : '^[0-9]\+$'
+
+
+    " echom '----'
+    " echom 'a:attr'
+    " echom a:attr
+
     for group in a:000
-        let code = synIDattr(synIDtrans(hlID(group)), a:attr, fam)
+        " echom "group 是: "   group
+        let code = synIDattr(
+                        \ synIDtrans(hlID(group)),
+                        \ a:attr,
+                        \ ui_,
+                       \ )
+        " echom "code 是: "   code
         if code =~? pat
             return code
+                " 'current'          : ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+                " 只要遇到能用的, 就定下颜色
         en
     endfor
+
     return ''
 endf
 
 fun! s:ori_colors()
-    let rules = copy(get(g:, 'skim_colors', {}))
-    let colors = join(map(items(filter(map(rules, 'call("s:get_color", v:val)'), '!empty(v:val)')), 'join(v:val, ":")'), ',')
+    let rules = copy(get(
+               \     g:,
+               \     'skim_colors',
+               \     {},
+               \    )
+               \)
+
+    let colors = join(
+                \ map(
+                    \ items(  filter(
+                                    \ map(
+                                        \ rules,
+                                        \ 'call("s:get_color", v:val)',
+                                       \ ),
+                                    \ '!empty(v:val)',
+                                   \ )
+                          \),
+                    \ 'join(v:val, ":")'
+                    \),
+                \
+                \ ',',
+               \ )
+
+    " echom "skim#shellescape('--color='..colors) 是: "   skim#shellescape('--color='..colors)
+    " '--color=current          : #444444,
+    "          info             : #20a780,
+    "          spinner          : #807030,
+    "          matched          : #444444,
+    "          prompt           : #805f00,
+    "          current_bg       : #fdf6e3,
+    "          fg               : #909f90,
+    "          header           : #909f90,
+    "          marker           : #8f3057,
+    "          current_match_bg : #444444,
+    "          current_match    : #f0f9e3,
+    "          pointer          : #12345'
+
     return empty(colors) ?
             \ ''
-            \ : skim#shellescape('--color='.colors)
+            \ : skim#shellescape('--color='..colors)
 endf
 
 fun! s:validate_layout(layout)
