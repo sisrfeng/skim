@@ -1,27 +1,3 @@
-" Copyright (c) 2017 Junegunn Choi
-"
-    " MIT License
-    "
-    " Permission is hereby granted, free of charge, to any person obtaining
-    " a copy of this software and associated documentation files (the
-    " "Software"), to deal in the Software without restriction, including
-    " without limitation the rights to use, copy, modify, merge, publish,
-    " distribute, sublicense, and/or sell copies of the Software, and to
-    " permit persons to whom the Software is furnished to do so, subject to
-    " the following conditions:
-    "
-    " The above copyright notice and this permission notice shall be
-    " included in all copies or substantial portions of the Software.
-    "
-    " THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-    " EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-    " MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-    " NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-    " LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-    " OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-    " WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
 if exists('g:loaded_skim')
     finish
 en
@@ -1007,11 +983,19 @@ fun! s:popup(opts) abort
 
     let highlight = get(a:opts, 'highlight', 'Comment')
     let frame = s:create_popup(highlight, {
-        \ 'row': row, 'col': col, 'width': width, 'height': height, 'border': border
-    \ })
+        \ 'row'    : row    ,
+        \ 'col'    : col    ,
+        \ 'width'  : width  ,
+        \ 'height' : height ,
+        \ 'border' : border ,
+       \ })
     call s:create_popup('Normal', {
-        \ 'row': row + shift.row, 'col': col + shift.col, 'width': width + shift.width, 'height': height + shift.height
-    \ })
+        \ 'row'    : row + shift.row       ,
+        \ 'col'    : col + shift.col       ,
+        \ 'width'  : width + shift.width   ,
+        \ 'height' : height + shift.height ,
+       \ })
+
     if has('nvim')
         exe     'autocmd BufWipeout <buffer> bwipeout '..frame
     en
